@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Farmer {
+  id              String   @id @default(cuid())
+  bidNumber       String   @unique
+  name            String
+  mobile          String
+  aadhaarMasked   String
+  bankAccountMask String
+  ifsc            String
+  village         String
+  surveyNumber    String
+  landArea        Float
+  applications    Application[]
+  createdAt       DateTime @default(now())
+}
+
+model Application {
+  id               String   @id @default(cuid())
+  farmerId         String
+  farmer           Farmer   @relation(fields: [farmerId], references: [id])
+  schemeName       String
+  status           String   @default("DRAFT")
+  subsidyAmount    Float
+  applicationDate  DateTime @default(now())
+}
